@@ -1,0 +1,73 @@
+{%load static%}
+<footer class="site-footer section-padding">
+   
+    <div class="container">
+        <div class="row">
+            <!-- Company Information -->
+            <div class="col-lg-3 col-12 mb-4 pb-2">
+                {% comment %} <h6 class="site-footer-title mb-3">Company</h6>
+                <a class="navbar-brand mb-2" href="{% url 'ouvrages:index'%}">
+                    <i class="bi-back"></i>
+                    <span>Bibliotheque</span>
+                </a> {% endcomment %}
+                <div class="d-flex align-content-center">
+                    <img src="{% static 'images/logoo.png'%}" style="height: 60px;width: auto; margin-top:auto;"/>
+                    <h6 style="margin-top:0.3rem; font-size: 2.5rem; font-weight: 800;">Library</h6>
+                </div>
+            </div>
+           
+            <!-- Resources -->
+            <div class="col-lg-3 col-md-4 col-6">
+                <h6 class="site-footer-title mb-3">Resources</h6>
+                <ul class="site-footer-links">
+                    <li class="site-footer-link-item"><a href="#" class="site-footer-link">Home</a></li>
+                    <li class="site-footer-link-item"><a href="#" class="site-footer-link">How it works</a></li>
+                    <li class="site-footer-link-item"><a href="#" class="site-footer-link">FAQs</a></li>
+                    <li class="site-footer-link-item"><a href="#" class="site-footer-link">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="col-lg-3 col-md-4 col-6 mb-4 mb-lg-0">
+                <h6 class="site-footer-title mb-3">Contact</h6>
+                <p class="text-white d-flex mb-1">
+                    <a href="tel: +91 8688056443" class="site-footer-link">+91 8688056443</a>
+                </p>
+                <p class="text-white d-flex">
+                    <a href="mailto: kotaashok331@gmail.com" class="site-footer-link">kotaashok331@gmail.com</a>
+                </p>
+                
+            </div>
+
+            <!-- Language Selection and Newsletter -->
+            <div class="col-lg-3 col-md-4 col-12 mt-4 mt-lg-0 ms-auto">
+                <h6 class="site-footer-title mb-3">Language</h6>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">English</button>
+                    <ul class="dropdown-menu">
+                        <li><button class="dropdown-item" type="button">Thai</button></li>
+                        <li><button class="dropdown-item" type="button">Myanmar</button></li>
+                        <li><button class="dropdown-item" type="button">Arabic</button></li>
+                    </ul>
+                </div>
+
+                <h6 class="site-footer-title mt-3">Newsletter</h6>
+                <form action="{% url 'collect_email' %}" method="post" class="newsletter-form">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <input type="email" id="email" name="email" class="form-control newsletter-input" placeholder="Entrez votre email" aria-label="Entrez votre email" aria-describedby="button-addon2" required>
+                        <button class="btn btn-outline-secondary newsletter-button" type="submit" id="button-addon2">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Copyright -->
+        <div class="row">
+            <div class="col-12 text-center">
+                
+                <span>Designed By <a href="https://kota-ashok.github.io/PROFILE/">ASHOK KUMAR REDDY KOTA</a></span>
+                
+            </div>
+        </div>
+    </div>
+</footer>

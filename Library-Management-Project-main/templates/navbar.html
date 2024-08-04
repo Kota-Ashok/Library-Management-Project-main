@@ -1,0 +1,155 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+
+        <a class="navbar-brand" href="{% url 'ouvrages:index'%}#section_1">
+            {% comment %} <i class="bi-back"></i> {% endcomment %}
+            <div class="d-flex justify-content-around align-content-center">
+                <img src="{% static 'images/logoo.png'%}" style="height: 60px;width: auto; margin-top:auto; margin-right: 0.5rem;"/>
+                <h6 style="margin-top:0.3rem; font-size: 2.5rem; font-weight: 800;">Library</h6>
+            </div>
+
+        </a>
+
+        <div class="d-lg-none ms-auto me-4">
+            <a href="#top" class="navbar-icon bi-person smoothscroll"></a>
+        </div>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+       
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-lg-5">
+                {% comment %} <li class="nav-item">
+                    <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_1">Home</a>
+                </li> {% endcomment %}
+                {% if user.is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link click-scroll" href="{% url 'profiles'%}">Adhérants</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link click-scroll" href="{% url 'ouvrages:browse'%}">Ouvrages</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link click-scroll" href="{% url 'ouvrages:exemplaires' %}">Exemplaires</a>
+                </li> 
+
+                <li class="nav-item">
+                    <a class="nav-link click-scroll" href="{% url 'ouvrages:emprunt' %}">Emprunts</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link click-scroll" href="{% url 'ouvrages:list_reservations' %}">Reservations</a>
+                </li>
+
+                {% else %}
+               
+                <li class="nav-item">
+                    <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_2">Recommended</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_3">How it works</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_4">FAQs</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link click-scroll" href="{% url 'ouvrages:index' %}#section_5">Equipe</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#section_5" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pages</a>
+
+                    <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{% url 'ouvrages:browse'%}">Browse Books</a></li>
+                        {% comment %} <li><a class="dropdown-item" href="{% url 'ouvrages:topics-listing'%}">Exemplaires</a></li> {% endcomment %}
+                        <li><a class="dropdown-item" href="{% url 'ouvrages:user-reservations' %}">My reservations</a></li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'inbox' %}">Inbox</a>
+                        </li>
+                        <li><a class="dropdown-item active" href="{% url 'contact'%}">Reclamation</a></li>
+
+                    </ul>
+                </li>
+                {%endif%}
+            </ul>
+            {% comment %} <div class="nav-item dropdown">
+
+
+                {% if user.is_authenticated %}
+                    <a href="#" class="nav-link" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ user.profile.profile_image.url }}">
+                    </a>
+                {% else %}
+                    <a class="nav-link navbar-icon bi-person smoothscroll" href="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    </a>
+                {% endif %}
+
+               
+                {% if user.is_authenticated %}
+                    <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ouvrages:user-reservations' %}">Reservations</a></li>
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                {% else %}
+                    <!-- If the user is not authenticated, display login and register links -->
+                    <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
+                        <li><a class="dropdown-item" href="{% url 'register' %}">Register</a></li>
+                    </ul>
+                {% endif %}
+
+            </div> {% endcomment %}
+
+            <div class="d-none d-lg-block ms-lg-4">
+                <div class="nav-item dropdown">
+
+
+                    {% if user.is_authenticated %}
+                        <a href="#" class="ms-lg-4" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{{ user.profile.profile_image.url }}" class="avatar avatar-sm nav-link navbar-icon bi-person smoothscroll">
+                        </a>
+                    {% else %}
+                        <a class="nav-link navbar-icon bi-person smoothscroll ms-lg-4" href="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        </a>
+                    {% endif %}
+
+                   
+                    {% if user.is_authenticated and not user.is_staff %}
+                        <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'inbox' %}">Inbox</a>
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                    {% else %}
+                        <!-- If the user is not authenticated, display login and register links -->
+                        <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
+                            <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
+                            <li><a class="dropdown-item" href="{% url 'register' %}">Register</a></li>
+                        </ul>
+                    {% endif %}
+
+                    {% if user.is_staff %}
+                    <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'inbox' %}">Inbox</a>
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                    {% endif %}
+                </div>
+            </div> 
+        </div>
+    </div>
+</nav>

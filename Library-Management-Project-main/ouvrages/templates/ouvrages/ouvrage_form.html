@@ -1,0 +1,58 @@
+{% extends "main.html" %}
+{% block content %}
+{% load static %}
+<header class="site-header d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        <div class="row align-items-center">
+
+            <div class="col-lg-5 col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'ouvrages:index'%}">Homepage</a></li>
+
+                        {% if page == 'edit' %}
+                        <li class="breadcrumb-item active" aria-current="page">Edit Ouvrage</li>
+                        {% endif %}
+                        {% if page == 'add' %}
+                        <li class="breadcrumb-item active" aria-current="page">Add Ouvrage</li>
+                        {% endif %}
+                    </ol>
+                </nav>
+                {% if page == 'add' %}
+                <h2 class="text-white">Enter Ouvrage Details</h2>
+                {% endif %}
+                {% if page == 'edit' %}
+                <h2 class="text-white">Ouvrage Details</h2>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</header>
+<section class="pt-lg-3 pb-lg-5 section-bg col-12 col-lg-12 justify-content-start align-items-center">
+    <div class="container col-6">
+        <form action="" method="POST" enctype="multipart/form-data" role="form" class="custom-form mt-2 pt-1 pb-1 mb-lg-0 mb-2">
+            {% csrf_token %}
+            {% for field in form%}
+
+            <!-- Input:Text -->
+            <div style="margin-bottom: 1.5rem;">
+                <label class="fw-bold fs-4">{{field.label}}:</label>
+                {{field}}
+                {% comment %} <input class="input input--text" id="formInput#text" type="text" name="text"
+                    placeholder="Enter text" /> {% endcomment %}
+            </div>
+            {% endfor %}
+            {% if page == 'add' %}
+            <input type="submit" value="Create" class="btn custom-btn smoothscroll me-2"/>
+            {% endif %}
+            {% if page == 'edit' %}
+            <input type="submit" value="Edit" class="btn custom-btn smoothscroll me-2"/>
+            {% endif %}
+            {% comment %} <button  type="submit">Create</button> {% endcomment %}
+            <a href="{% url 'ouvrages:browse' %}" class="btn mybtn custom-border-btn  smoothscroll me-2">Go Back</a>
+        </form>
+    </div>  
+</section>
+
+{% endblock content %}

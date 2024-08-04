@@ -1,0 +1,339 @@
+{% extends "main.html" %}
+{% block content%}
+{% load static %}
+
+<header class="site-header d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+
+            <div class="col-lg-5 col-12 mb-5 ms-lg-5">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'ouvrages:index'%}">Homepage</a></li>
+
+                        <li class="breadcrumb-item active" aria-current="page">{{ouvrage.titre}}</li>
+                    </ol>
+                </nav>
+                <h2 class="text-white">{{ouvrage.titre}}</h2>
+                <h5 class="text-black-50">Auteur{{ ouvrage.auteurs.all.count|pluralize:"s" }}:</h5>
+                <p class="mb-0 text-white fst-italic">
+                    {% if ouvrage.auteurs.all.count == 1 %}
+                        {% for auteur in ouvrage.auteurs.all %}
+                                {{ auteur }}
+                        {% endfor %}
+                    {% else %}
+                        {% for auteur in ouvrage.auteurs.all %}
+                            {{ auteur }}
+                            {% if not forloop.last %}
+                                &amp; <!-- Separator -->
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </p>
+                
+                <div class="d-flex flex-row justify-content-start align-items-end mt-4">
+                    {%for categorie in ouvrage.categories.all%}
+                    <span class="badge bg-music me-1">{{categorie}}</span>
+                    {%endfor%} 
+                </div>
+
+                {% if user.is_authenticated %}
+                <div class="d-flex flex-row align-items-center mt-lg-3">
+                    <h5 class="text-black-50">Exemplaires disponibles:  <span class="badge bg-design rounded-pill ms-auto">{{ouvrage.count_available_exemplaires}}</span></h5>
+                </div>
+
+                {% if ouvrage.exemplaires_total == 1 or ouvrage.count_available_exemplaires == 0%}
+                <p class="mb-0 text-warning fst-italic">Cet ouvrage est pour consultation sur place seulement.</p>
+                {% endif %}
+
+                {%endif%}
+
+                {% if user.is_staff %}
+                <div class="d-flex align-items-center mt-4">
+                    <a href="{% url 'ouvrages:update-ouvrage' ouvrage.id%}" class="btn custom-btn custom-border-btn smoothscroll me-2">Edit</a>
+                    <a href="{% url 'ouvrages:delete-ouvrage' ouvrage.id%}" class="btn mybtn custom-border-btn smoothscroll me-2">Delete</a>
+                </div>
+                {%endif%}
+                {% if not user.is_authenticated %}
+                <div class="d-flex align-items-center mt-4">
+                    <a href="#topics-detail" class="btn custom-btn custom-border-btn smoothscroll me-2">Details</a>
+                    <a href="#reservation" class="btn custom-btn custom-border-btn smoothscroll me-2">Reserver</a>
+                </div>
+                {%endif%}
+                
+                {% if user.is_authenticated and not user.is_staff %}
+                <div class="d-flex align-items-center mt-4">
+                    <a href="#topics-detail" class="btn custom-btn custom-border-btn smoothscroll me-2">Details</a>
+                    {% if ouvrage.exemplaires_total == 1 or ouvrage.count_available_exemplaires == 0 %}
+                    <a href="#reservation" class="btn custom-btn smoothscroll me-2" style="color: darkgray; pointer-events: none; cursor: not-allowed; background-color: lightgray;" onclick="return false;">Reserver  <span href="#" class="bi-bookmark smoothscroll"></span></a>
+                    {% else %}
+                    <a href="{% url 'ouvrages:make-reservation' ouvrage.id%}" class="btn custom-btn custom-border-btn smoothscroll me-2">Reserver <span href="#" class="bi-bookmark smoothscroll"></span></a>
+                    {% endif %}
+                </div>
+                {% comment %} <a href="#reservation" class="btn mybtn mt-3 mt-lg-4">Bookmark <span href="#" class="bi-bookmark smoothscroll"></span></a> {% endcomment %}
+                {%endif%}
+            </div>
+
+            <div class="col-lg-5 col-12 ms-lg-5">
+                <div class="topics-detail-block bg-white shadow-lg bg-opacity-0 h-auto" style="width: 22rem">         
+                    <img src="{{ ouvrage.featured_image.url }}" class="topics-detail-block-image shadow-lg img-fluid w-100 h-100" >
+                </div>
+    
+            </div>
+            
+        </div>
+    </div>
+</header>
+
+<section class="topics-detail-section p-lg-5" id="topics-detail">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-12 m-auto">
+                <h3 class="mb-4">Description</h3>
+
+                <p class="">{{ouvrage.description}}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% comment %} {% if user.is_staff %} 
+<section class="">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-12 col-12 m-auto">
+                <h3 class="mb-4">Exemplaires de cet ouvrage</h3>
+            </div>
+            <div class="col-lg-8 col-12 mt-3 mx-auto">
+            {% for exemplaire in ouvrage.exemplaire_set.all %}
+                <div class="custom-block custom-block-topics-listing bg-white shadow-lg mb-5">
+                    <div class="d-flex">
+                        
+                        <img src="{{ exemplaire.ouvrage.featured_image.url }}" class="custom-block-image img-fluid" alt="">
+
+                        <div class="custom-block-topics-listing-info d-flex">
+                            <div>
+                                <div class="d-flex flex-row justify-content-lg-between">
+                                    <h5 class="mb-2 p-2">Exemplaire de : {{exemplaire.ouvrage.titre}}</h5>
+                                    {% if exemplaire.etat == 'DISPONIBLE'%}
+                                    <span class="badge bg-education" style="width: auto; height: 2rem;"><p class="w-100 text-white fw-semibold">{{exemplaire.get_etat_display}}</p></span>
+                                    {% elif exemplaire.etat == 'HORS_PRET' %}
+                                    <span class="badge bg-advertising" style="width: auto; height: 2rem;"><p class="w-100 text-white fw-semibold">{{exemplaire.get_etat_display}}</p></span>
+                                    {% else %}
+                                    <span class="badge bg-music" style="width: auto; height: 2rem;"><p class="w-100 text-white fw-semibold">{{exemplaire.get_etat_display}}</p></span>
+                                    {% endif %}
+                                    
+                                </div>
+                                <p class="mb-0 p-2">Reservé: {{ exemplaire.reserve }}</p>
+                                <a href="{% url 'ouvrages:update-exemplaire' exemplaire.id%}" class="btn custom-btn mt-3 mt-lg-4">Edit</a>
+                                <a href="{% url 'ouvrages:delete-exemplaire' exemplaire.id%}" class="btn mybtn mt-3 mt-lg-4" >Delete</a>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                    <div class="d-flex flex-column justify-content-center align-items-center mb-0 mb-lg-0">  
+                        <h4 class="text-black-50">No Exemplaires yet :/ </h4>
+                        <img src="{% static 'images/sad.png' %}" alt="Tristesse" class="img-fluid" style="width: 17rem" >
+                        <a href="{% url 'ouvrages:create-exemplaire'%}" class="btn custom-btn mt-3 mt-lg-4">Ajouter des exemplaires</a>
+                    </div>
+                {% endfor %}
+            </div>
+            {% comment %} <div class="col-lg-12 col-12">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center mb-0">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">Prev</span>
+                            </a>
+                        </li>
+
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+                        
+                        <li class="page-item">
+                            <a class="page-link" href="#">2</a>
+                        </li>
+                        
+                        <li class="page-item">
+                            <a class="page-link" href="#">3</a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link" href="#">4</a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link" href="#">5</a>
+                        </li>
+                        
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>         
+        </div>
+    </div>
+</section> 
+{% endif %} {% endcomment %}
+
+{% if not user.is_staff %}
+<section class="section-bg py-lg-5 pb-lg-3 d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        <div class="row justify-content-lg-evenly align-items-start">
+
+            <div class="col-lg-7 col-12 mb-5">
+                <div class="">
+                    <h3 class="mb-3 pb-2">Feedback</h3>
+                    <p class="mb-lg-4">
+                        <span style="font-weight: bold;">{{ ouvrage.vote_ratio }}%</span> Positive Feedback ({{ ouvrage.vote_total }} vote{{ ouvrage.vote_total|pluralize:"s" }})
+                    </p>
+                </div>
+
+                {% if request.user.profile.id in ouvrage.reviewers %}
+                    <p class="text-danger col-12">You have already submitted your review for this ouvrage</p>
+                {% endif %}
+
+                {% if not user.is_authenticated %}
+                    <div class="col-lg-10 col-12 m-auto" id="reservation">
+                        <blockquote>
+                            Connectez-vous pour laisser un Feedback... <a href="{% url 'login' %}" class="custom-icon bi-box-arrow-up-right smoothscroll"><small>login/signup</small></a>
+                        </blockquote>
+                    </div>
+                {% else %}
+                    <div class="w-auto mt-lg-2">
+                        <form action="{% url 'ouvrages:ouvrage' ouvrage.id %}" method="post" class="custom-form contact-form" role="form">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                <div class="col-lg-10 col-12 mt-2">
+                                    <div class="form-floating">
+                                        {{ field }}
+                                        <label class="label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    </div>
+                                    {% if field.help_text %}
+                                        <div class="form-text">{{ field.help_text }}</div>
+                                    {% endif %}
+                                    {% for error in field.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                            {% if request.user.profile.id in ouvrage.reviewers %}
+                            <button type="submit" class="btn custom-btn mt-3" style="color: darkgray; pointer-events: none; cursor: not-allowed; background-color: lightgray;" onclick="return false;"style="color: darkgray; pointer-events: none; cursor: not-allowed; background-color: lightgray;" onclick="return false;">Envoyer</button>
+                            {%else%}
+                            <button type="submit" class="btn custom-btn mt-3">Envoyer</button>
+                            {%endif%}
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-lg-5 col-12 mb-5">
+                <div class="w-auto">
+                    <h3 class="mb-5 pb-2">Reviews</h3>
+                </div>
+                <div class="commentList col-12 mt-lg-2">
+                    {% for review in reviews %}
+                        {% if review.body %}
+                            <div class="comment">
+                                <a href="#">
+                                    <img class="avatar avatar--sm" src="{{review.owner.profile_image.url}}" alt="user" />
+                                </a>
+                                <div class="comment__details">
+                                    <a href="#" class="comment__author">{{review.owner.nom}} {{review.owner.prenom}}</a>
+                                    <p class="comment__info">
+                                        {{review.body|linebreaksbr}}
+                                    </p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div> 
+                {% if reviews.has_other_pages %}
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-center mb-0">
+                                {% if reviews.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{reviews.previous_page_number}}" aria-label="Previous">
+                                            <span aria-hidden="true">Prev</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% for page in custom_range %}
+                                    {% if page == reviews.number %}
+                                        <li class="page-item active" aria-current="page">
+                                            <a class="page-link" href="?page={{page}}">{{page}}</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{page}}">{{page}}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if reviews.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{reviews.next_page_number}}" aria-label="Next">
+                                            <span aria-hidden="true">Next</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if not user.is_authenticated %}
+<section class="section-padding">
+    <div class="container">
+        <div class="d-flex row justify-content-center align-items-center">
+            <div class="col-lg-4 col-12">
+                <img src="{% static 'images/rear-view-young-college-student.jpg' %}" class="newsletter-image img-fluid" alt="">
+            </div>
+            <div class="col-lg-8 col-12 m-auto" id="reservation">
+                <blockquote>
+                Veuillez vous connectez pour effectuer votre réservation... <a href="{% url 'login' %}" class="custom-icon bi-box-arrow-up-right smoothscroll"><small>login/signup</small></a> 
+                </blockquote>
+            </div>                   
+        </div>
+    </div>
+</section>
+{% endif %}
+{% comment %} <section class="section-padding section-bg">
+    <div class="container">
+        <div class="row justify-content-center">
+
+            <div class="col-lg-5 col-12">
+                <img src="{% static 'images/rear-view-young-college-student.jpg' %}" class="newsletter-image img-fluid" alt="">
+            </div>
+
+            <div class="col-lg-5 col-12 subscribe-form-wrap d-flex justify-content-center align-items-center">
+                <form class="custom-form subscribe-form" action="#" method="post" role="form">
+                    <h4 class="mb-4 pb-2">Get Newsletter</h4>
+
+                    <input type="email" name="subscribe-email" id="subscribe-email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email Address" required="">
+
+                    <div class="col-lg-12 col-12">
+                        <button type="submit" class="form-control">Subscribe</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section> {% endcomment %}
+
+
+{% endblock content%}

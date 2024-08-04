@@ -1,0 +1,145 @@
+{% extends 'main.html' %}
+{%load static%}
+
+{% block content %}
+<header class="hero-section site-header d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12 col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'ouvrages:index' %}">Homepage</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Profiles</li>
+                    </ol>
+                </nav>
+                <h2 class="text-white">Profiles des adhérants</h2>
+            </div>
+            <div class="col-lg-10 col-12">
+                <form method="GET"  action="{% url 'profiles' %}" class="custom-form mt-2 pt-1 pb-1 mb-lg-0 mb-2" role="search">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bi-search" id="basic-addon1">
+                            
+                        </span>
+
+                        <input name="search_query" value="{{search_query}}" type="search" class="form-control" id="search_query" placeholder="Search Adherants by Name, CNE..." aria-label="Search">
+
+                        <button type="submit" class="form-control">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+{% comment %} <section class="section-bg py-lg-5 pb-lg-3 d-flex flex-column justify-content-center align-items-center">
+    <div class="container">
+        {% if profiles %}
+        <table class="table table-hover table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">CNE</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Prénom</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone Number</th>
+                    <th scope="col">Sexe</th>
+                    <th scope="col">CNI</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for profile in profiles %}
+                <tr>
+                    <td>
+                        <a href="{% url 'user-profile' profile.id %}">
+                            {{profile.CNE}}
+                        </a>
+                    </td>
+                    <td>{{profile.username}}</td>
+                    <td>{{ profile.nom }}</td>
+                    <td>{{ profile.prenom }}</td>
+                    <td>{{ profile.email }}</td>
+                    <td>{% if profile.phonenumber %}{{ profile.phonenumber }}{% endif %}</td>
+                    <td>{% if profile.sexe %}{{ profile.sexe }}{% endif %}</td>
+                    <td>{% if profile.CNI %}{{ profile.CNI }}{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="d-flex flex-column justify-content-center align-items-center mb-0 mb-lg-0">
+            <h4 class="text-black-50">Aucun profil d'adhérant trouvé</h4>
+            <img src="{% static 'images/sad.png' %}" alt="Tristesse" class="img-fluid" style="width: 17rem">
+        </div>
+        {% endif %}
+    </div>
+</section> {% endcomment %}
+
+<section class="section-bg p-lg-3">
+    <style>
+        /* Styles spécifiques pour les éléments th */
+        .th {
+            background-color: #fafafa !important; /* Couleur d'arrière-plan */
+            color: #83b4bb; /* Couleur du texte */
+            border-radius: 5px !important; /* Bordures arrondies */
+            padding: 10px; /* Espacement interne */
+            }
+            table {
+            border-collapse: separate;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Ajouter une ombre */
+            }
+    </style>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-12">
+                <div class="custom-block bg-white shadow-lg">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="section-title">Liste des Adhérants</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table ">
+                            <thead >
+                                <tr class="th">
+                                    <th class="th">CNE</th>
+                                    <th class="th">Username</th>
+                                    <th class="th">Nom</th>
+                                    <th class="th">Prénom</th>
+                                    <th class="th">Email</th>
+                                    <th class="th">Phone Number</th>
+                                    <th class="th">Sexe</th>
+                                    <th class="th">CNI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for profile in profiles %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'user-profile' profile.id %}">
+                                            {{profile.CNE}}
+                                        </a>
+                                    </td>
+                                    <td>{{profile.username}}</td>
+                                    <td>{{ profile.nom }}</td>
+                                    <td>{{ profile.prenom }}</td>
+                                    <td>{{ profile.email }}</td>
+                                    <td>{% if profile.phonenumber %}{{ profile.phonenumber }}{% endif %}</td>
+                                    <td>{% if profile.sexe %}{{ profile.sexe }}{% endif %}</td>
+                                    <td>{% if profile.CNI %}{{ profile.CNI }}{% endif %}</td>
+                                </tr>
+
+                               
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="fw-semibold text-center text-warning">Aucun profil d'adhérant trouvé</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock content %}

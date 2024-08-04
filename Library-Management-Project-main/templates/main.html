@@ -1,0 +1,290 @@
+<!Doctype html>
+<html lang="en">
+{% load static %}
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">      
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans&display=swap" rel="stylesheet">               
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/bootstrap-icons.css' %}" rel="stylesheet">
+        <link rel="icon" type="image/png" href="{% static 'images/logoo.png'%}" />
+        {% comment %} <link href="{% static 'css/_alert.css' %}" rel="stylesheet"> {% endcomment %}
+        <link href="{% static 'css/templatemo-topic-listing.css' %}" rel="stylesheet">   
+        <title>Bibliotheque</title>   
+</head>
+<body class="topics-listing-page" id="top">
+    <main>
+        <style type="text/css">
+            .tag{
+                display: inline-flex;
+                align-items: center;
+                height: -webkit-fit-content;
+                height: -moz-fit-content;
+                height: fit-content;
+                width: -webkit-fit-content;
+                width: -moz-fit-content;
+                width: fit-content;
+                border-radius: 3rem;
+                padding: 0.3rem 0.4rem;
+                font-size: 0.8rem;
+                font-weight: bold;
+                cursor: pointer;
+                color: white;
+            }
+            .avatar {
+                border-radius: 50%;
+                border: 2px solid #7bbfcc;
+                object-fit: cover;
+            }
+              
+            .avatar--xl {
+            height: 20rem;
+            width: 20rem;
+            }
+            
+            .avatar--lg {
+            height: 15rem;
+            width: 15rem;
+            }
+            
+            .avatar--md {
+            height: 7rem;
+            width: 7rem;
+            }
+            
+            .avatar--sm {
+            height: 3rem;
+            width: 3rem;
+            } 
+            
+            .commentList {
+            margin: 3rem 0;
+            }
+            
+            .comment {
+            display: flex;
+            gap: 1rem;
+            width: 100%;
+            margin-right: 0;
+            margin-left: 0;
+            }
+            
+            .comment:not(:last-child) {
+            margin-bottom: 2rem;
+            }
+            
+            .comment__author {
+            font-size: 1.2rem;
+            }
+            
+            .comment__info {
+            font-size: 0.9rem;
+            }
+
+            .stars {
+                display: inline-block;
+                margin-bottom: 2rem;
+            }
+    
+            .star {
+                color: hsl(0, 0%, 100%); 
+                cursor: pointer;
+                padding: 0.3rem;
+                width : 5rem;
+                -webkit-text-stroke-width: 0.1rem; 
+                -webkit-text-stroke-color: #ffc107;
+            }
+    
+            .star.checked { 
+                color: gold;
+            }
+            .nav-ist:hover {
+                border-bottom-color: color: #005792;
+                color: color: #005792;
+            }
+            .mybtn {
+                background: #9a7baa;
+                border: 2px solid transparent;
+                border-radius: 100px;
+                color: white;
+                font-size: 18px;
+                font-weight: 600;
+                line-height: normal;
+                transition: all 0.3s;
+                padding: 10px 20px;
+            }
+              
+            .mybtn:hover {
+                background: #45244e;
+                color: white;
+            }
+
+            .page-link {
+                border: 0;
+                border-radius: 10px;
+                color: #717275;
+                font-family: 'Montserrat', sans-serif;
+                margin: 0 5px;
+                padding: 10px 20px;
+                transition: background-color 0.3s, transform 0.3s;
+            }
+            .page-link:hover,
+            .page-item:first-child .page-link:hover,
+            .page-item:last-child .page-link:hover {
+              background-color: #80d0c7;
+              color:  #ffffff;
+            }
+            
+            .page-item:first-child .page-link {
+              margin-right: 5px;
+            }
+            
+            .page-item:first-child .page-link,
+            .page-item:last-child .page-link {
+              background-color: #f0f8ff;
+              border-radius: 10px;
+            }
+
+            .page-item.active .page-link, /* Specificity for active state */
+            .page-link.active {
+            background-color:#006a71;
+            border-color: #006a71;
+            color: #ffffff !important; /* Ensure text color is white */
+            }
+            .content-box {
+                width: 95%;
+                max-width: 85rem;
+                margin: 0 auto;
+              }
+            .inbox {
+                height: 90vh;
+              }
+              
+              .inbox__title,
+              .inbox__title span {
+                font-size: 2.4rem;
+                font-weight: 700;
+                color: #2d2d39;
+                text-transform: uppercase;
+                text-align: left;
+                margin-bottom: 3rem;
+              }
+              
+              .inbox__title span {
+                color: #717275;
+              }
+              
+              .messages {
+                list-style: none;
+                background: white;
+                padding: 0.5rem 3rem;
+                border: 2px solid section-bg;
+                border-radius: 0.7rem;
+              }
+              
+              .message {
+                padding: 2.5rem 0;
+              }
+              
+              .message > a span {
+                font-size: 1.45rem;
+                font-weight: 500;
+              }
+              
+              .message.message--unread a span {
+                font-weight: 700;
+                color: #2d2d39;
+              }
+              
+              .message:not(:last-child) {
+                border-bottom: 2px solid cyan;
+              }
+              
+              .message > a {
+                display: flex;
+                gap: 1rem;
+              }
+              
+              .message__author,
+              .message__date {
+                flex-basis: 25%;
+              }
+              
+              .message__subject {
+                flex-basis: 50%;
+              }
+              
+              .message__date {
+                text-align: right;
+              }
+        </style>
+    {% include 'navbar.html' %}
+
+    {% if messages %}
+        <div class="container"> 
+            {% for message in messages %} 
+                <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+                {% if message.tags == 'error' %} 
+                <script>
+                    swal({
+                        title: "Erreur",
+                        text: "{{ message|safe }}",
+                        icon: "error",
+                        buttons: 'ok',
+                      });
+                </script>                    
+                 {% elif message.tags == 'warning'%}
+                <script>
+                    swal({
+                        title: "warning !!",
+                        text: '{{ message|safe }}',
+                        icon: "warning",
+                        buttons: 'ok',
+                      });
+                </script>
+                {% elif  message.tags == 'info'%}
+                <script>
+                    swal({
+                        title: "Notification",
+                        text: "{{ message|safe }}",
+                        icon: "info",
+                        buttons: 'ok',
+                      });
+                </script>
+                 {% else %}
+                    <script>
+                        swal({
+                            title: "Succès !",
+                            text: "Opération effectuée avcéc succés",
+                            icon: "success",
+                            buttons: 'ok',
+                          });
+                    </script>
+                 {% endif %}
+            {% endfor %}
+        </div>  
+    {% endif %} 
+
+    {% comment %} {% for message in messages %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <p class="mb-0">{{ message }}</p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+  {% endcomment %}
+    {% block content %}
+
+
+
+    {% if user.is_authenticated %}<p>Welcome {{ request.user.username }}</p>{% endif %}
+    {% endblock content %}
+    </main>
+    {% include 'footer.html' %}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/jquery.sticky.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+</body>
+</html>
